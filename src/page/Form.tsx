@@ -36,9 +36,12 @@ interface Users {
   nationality: string;
   birthdate: string;
 };
+
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
+
 interface TableParams {
   pagination?: TablePaginationConfig;
+  sorter?: any;
 }
 
 function FormComponent(){
@@ -77,16 +80,17 @@ function FormComponent(){
     pagination: {
       current: 1,
       pageSize: 2,
-    },
+    }
   });
 
   const [record, setRecord] = useState<React.Key[]>([]);
 
+  console.log(tableParams.sorter?.columnKey)
   const handleTableChange: TableProps['onChange'] = (pagination, filters, sorter) => {
-    console.log(sorter)
-      setTableParams({
+      setTableParams(() => ({
         pagination,
-      });
+        sorter
+      }));
   };
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
@@ -101,9 +105,9 @@ function FormComponent(){
     {
       title: 'FirstName',
       dataIndex: 'fname',
-      // sorter: (a, b) => a.fname.length - b.fname.length,
-      sorter: true,
-      // sortOrder: sortedInfo.columnKey === 'name' ? sortedInfo.order : null,
+      key: 'fname',
+      sorter: (a, b) => a.fname.localeCompare(b.fname),
+      sortOrder: tableParams.sorter?.columnKey === 'fname' ? tableParams.sorter?.order : null,
     },
     {
       title: 'LastName',
