@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { addUser } from '../features/user/userSlice';
+import React, { useEffect, useState } from 'react';
+import { addUser, removeUser, fetchUserById } from '../features/user/userSlice';
 import { useTypedSelector, useAppDispatch } from '../store/stateStore';
-import { Button, DatePicker, Form, Input, InputNumber, Select } from 'antd';
+import { Space, Button, DatePicker, Form, Input, InputNumber, Select, Table } from 'antd';
+import { GetProp, TableProps, TableColumnsType } from 'antd';
 
 const formItemLayout = {
   labelCol: {
@@ -34,13 +35,22 @@ interface Users {
   gender: string;
   nationality: string;
   birthdate: string;
+};
+type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
+interface TableParams {
+  pagination?: TablePaginationConfig;
 }
 
 function FormComponent(){
 
   const dispatch = useAppDispatch();
   const users = useTypedSelector((state) => state.users.users);
-  console.log(users)
+  const user = useTypedSelector((state) => state.user.user);
+
+  useEffect(() => {
+    setForm(user as any)
+  },[user])
+
   const [form, setForm] = useState<Users>({
     prefix: '',
     fname: '',
@@ -62,6 +72,49 @@ function FormComponent(){
   const handleSubmit = () => {
     dispatch(addUser(form));
   };
+
+  const [tableParams, setTableParams] = useState<TableParams>({
+    pagination: {
+      current: 1,
+      pageSize: 2,
+    },
+  });
+
+  const [record, setRecord] = useState<React.Key[]>([]);
+
+  const handleTableChange: TableProps['onChange'] = (pagination, filters, sorter) => {
+      setTableParams({
+        pagination,
+      });
+  };
+
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    setRecord(newSelectedRowKeys)
+  };
+
+  const saveRemoveUser = () => {
+    dispatch(removeUser(record));
+  };
+
+  const columns: TableColumnsType<Users> = [
+    {
+      title: 'FirstName',
+      dataIndex: 'fname',
+    },
+    {
+      title: 'LastName',
+      dataIndex: 'lname',
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (_, record) => (
+        <Space size="middle" onClick={() => dispatch(fetchUserById(record))}>
+          <a>Detail</a>
+        </Space>
+      ),
+    },
+  ];
 
   return(
     <div style={{ padding: '5%'}}>
@@ -149,6 +202,17 @@ function FormComponent(){
           </Button>
         </Form.Item>
       </Form>
+      <Button type="primary" htmlType="button" onClick={saveRemoveUser}>DELETE</Button>
+      <Table 
+        columns={columns} 
+        dataSource={users} 
+        rowKey={(record) => record.fname}
+        rowSelection={{
+          onChange: onSelectChange,
+        }} 
+        pagination={tableParams.pagination}
+        onChange={handleTableChange}
+      />
     </div>
   );
 }

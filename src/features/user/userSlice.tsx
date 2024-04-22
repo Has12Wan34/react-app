@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 interface userInitialStateType {
-    users: Users[] | null | undefined | [],
-    user: Users | {} | null | undefined,
+    users: Users[] | undefined | [];
+    user: Users | {} | null | undefined;
     status: string | null | undefined;
     error: string | null | undefined;
 };
@@ -25,30 +25,19 @@ const initialState : userInitialStateType = {
     error: null
 };
 
-// export const fetchTravels = createAsyncThunk(
-// 'travel/fetchTravels',
-// async (config) => {
-//     const res = await travelAPI.get('/api/travels', config);
-//     return res.data;
-// }
-// );
+export const fetchUserById = createAsyncThunk(
+    'user/fetchUserById',
+    async (body:Users) => {
+        return body;
+    }
+);
 
-// export const fetchTravelsById = createAsyncThunk(
-// 'travel/fetchTravelsById',
-// async (config) => {
-//     const { id } = config;
-//     const res = await travelAPI.get(`/api/travel/${id}`);
-//     return res.data;
-// }
-// );
-
-// export const fetchSearchTravels = createAsyncThunk(
-// 'travel/fetchSearchTravels',
-// async (config) => {
-//     const res = await travelAPI.get('/api/travels/search', config);
-//     return res.data;
-// }
-// );
+export const editUser = createAsyncThunk(
+    'user/editUser',
+    async (body:Users) => {
+        return body;
+    }
+);
 
 export const addUser = createAsyncThunk(
     'user/addUser',
@@ -57,23 +46,12 @@ export const addUser = createAsyncThunk(
     }
 );
 
-// export const editTravel = createAsyncThunk(
-// 'travel/editTravel',
-// async (config) => {
-//     const { id, body } = config;
-//     const res = await travelAPI.put(`/api/travel/${id}`, body);
-//     return res.data;
-// }
-// );
-
-// export const removeTravel = createAsyncThunk(
-// 'travel/removeTravel',
-// async (config) => {
-//     const { id } = config;
-//     const res = await travelAPI.delete(`/api/travel/${id}`);
-//     return res.data;
-// }
-// );
+export const removeUser = createAsyncThunk(
+    'user/removeUser',
+    async (arr:React.Key[]) => {
+        return arr;
+    }
+);
 
 const userSlice = createSlice({
     name: 'user',
@@ -81,8 +59,11 @@ const userSlice = createSlice({
     reducers: {
         initializeDataFromLocalStorage: (state) => {
             const users = localStorage.getItem('users');
+            const user = localStorage.getItem('user');
             if (users) {
               state.users = JSON.parse(users);
+            }else if (user) {
+                state.user = JSON.parse(user);
             }
         },
     },
@@ -99,78 +80,46 @@ const userSlice = createSlice({
             state.status = 'failed';
             state.error = action.error.message;
         })
+        builder.addCase(removeUser.pending, (state) => {
+            state.status = 'loading';
+        })
+        builder.addCase(removeUser.fulfilled, (state:any, action) => {
+            state.status = 'succeeded';
+            const newUsers = state.users.filter((item: Users) => !action.payload.includes(item.fname));
+            localStorage.setItem('users', JSON.stringify(newUsers));
+            state.users = newUsers;
+        })
+        builder.addCase(removeUser.rejected, (state:any, action) => {
+            state.status = 'failed';
+            state.error = action.error.message;
+        })
+        builder.addCase(fetchUserById.pending, (state) => {
+            state.status = 'loading';
+        })
+        builder.addCase(fetchUserById.fulfilled, (state:any, action) => {
+            state.status = 'succeeded';
+            localStorage.setItem('user', JSON.stringify(action.payload));
+            state.user = action.payload;
+        })
+        builder.addCase(fetchUserById.rejected, (state:any, action) => {
+            state.status = 'failed';
+            state.error = action.error.message;
+        })
+        builder.addCase(editUser.pending, (state) => {
+            state.status = 'loading';
+        })
+        builder.addCase(editUser.fulfilled, (state:any, action) => {
+            state.status = 'succeeded';
+            const targetIndex = state.users.findIndex((item: Users) => item.fname === action.payload.fname);
+            state.users[targetIndex].name = action.payload.fname;
+            state.users[targetIndex].lname = action.payload.lname;
+            state.users[targetIndex].amount = action.payload.amount;
+        })
+        builder.addCase(editUser.rejected, (state:any, action) => {
+            state.status = 'failed';
+            state.error = action.error.message;
+        })
     }
-    //extraReducers: {
-        // [addUser.pending]: (state) => {
-        // state.status = 'loading';
-        // },
-        // [addUser.fulfilled]: (state, action) => {
-        // state.status = 'succeeded';
-        // state.travels = [action.payload, ...state.travels];
-        // },
-        // [addUser.rejected]: (state, action) => {
-        // state.status = 'failed';
-        // state.error = action.error.message;
-        // },
-        // [editTravel.pending]: (state) => {
-        // state.status = 'loading';
-        // },
-        // [editTravel.fulfilled]: (state, action) => {
-        // state.status = 'succeeded';
-        // const index = state.travels.findIndex(item => item.id === action.payload.id);
-        // if (index !== -1) {
-        //     state.travels[index] = action.payload;
-        // }
-        // },
-        // [editTravel.rejected]: (state, action) => {
-        // state.status = 'failed';
-        // state.error = action.error.message;
-        // },
-        // [fetchTravels.pending]: (state) => {
-        // state.status = 'loading';
-        // },
-        // [fetchTravels.fulfilled]: (state, action) => {
-        // state.status = 'succeeded';
-        // state.travels = action.payload;
-        // },
-        // [fetchTravels.rejected]: (state, action) => {
-        // state.status = 'failed';
-        // state.error = action.error.message;
-        // },
-        // [fetchSearchTravels.pending]: (state) => {
-        // state.status = 'loading';
-        // },
-        // [fetchSearchTravels.fulfilled]: (state, action) => {
-        // state.status = 'succeeded';
-        // state.travels = action.payload;
-        // },
-        // [fetchSearchTravels.rejected]: (state, action) => {
-        // state.status = 'failed';
-        // state.error = action.error.message;
-        // },
-        // [fetchTravelsById.pending]: (state) => {
-        // state.status = 'loading';
-        // },
-        // [fetchTravelsById.fulfilled]: (state, action) => {
-        // state.status = 'succeeded';
-        // state.travel = action.payload;
-        // },
-        // [fetchTravelsById.rejected]: (state, action) => {
-        // state.status = 'failed';
-        // state.error = action.error.message;
-        // },
-        // [removeTravel.pending]: (state) => {
-        // state.status = 'loading';
-        // },
-        // [removeTravel.fulfilled]: (state, action) => {
-        // state.status = 'succeeded';
-        // state.travels = action.payload;
-        // },
-        // [removeTravel.rejected]: (state, action) => {
-        // state.status = 'failed';
-        // state.error = action.error.message;
-        // },
-    //}
 });
 
 export const userServices = {
