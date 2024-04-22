@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Radio, Row, Col, Divider } from "antd";
 import { useTranslation } from 'react-i18next';
 
@@ -28,8 +28,7 @@ const Shapse = [
 
 const Shapse_Menu: ShapseMenu[] = [
     { 
-        menu : 'move-left',
-        set : '',
+        menu : 'Move_left',
         css : { 
             height: '0px', 
             width: '0px', 
@@ -40,8 +39,7 @@ const Shapse_Menu: ShapseMenu[] = [
 
     },
     { 
-        menu : 'move-top',
-        set : '',
+        menu : 'Move_top',
         css : { 
             height: '0px', 
             width: '0px', 
@@ -52,8 +50,7 @@ const Shapse_Menu: ShapseMenu[] = [
 
     },
     { 
-        menu : 'move-bottom',
-        set : '',
+        menu : 'Move_bottom',
         css : { 
             height: '0px', 
             width: '0px', 
@@ -63,8 +60,7 @@ const Shapse_Menu: ShapseMenu[] = [
         }
     },
     { 
-        menu : 'move-right',
-        set : '',
+        menu : 'Move_rigth',
         css :  { 
             height: '0px', 
             width: '0px', 
@@ -76,13 +72,12 @@ const Shapse_Menu: ShapseMenu[] = [
 ];
 
 type Position = {
-    row_1 : 'center' | 'end' | undefined,
-    row_2 : 'end' | 'center' | undefined,
+    top : 'center' | 'end' | undefined,
+    bottom : 'end' | 'center' | undefined,
 };
 
 type ShapseMenu = {
     menu: string;
-    set: string;
     css: any;
 };
 
@@ -90,24 +85,53 @@ function Home() {
     const { t, i18n } = useTranslation();
 
     const [position, setPosition] = useState<Position>({
-        row_1 : 'center',
-        row_2 : 'end',
+        top : 'center',
+        bottom : 'end',
     });
 
     const handleSelectMenu = (value:ShapseMenu) => {
         setPosition((s) => ({
             ...s,
-            // row_1 : x,
-            row_2 : 'center',
+            top : position.bottom,
+            bottom : position.top,
         }))
     };
 
     const handleSelectLag = (lang:string) => {
         i18n.changeLanguage(lang);
     };
+    const [data, setData] = useState(Shapse);
 
+    const shuffle = (array: any[]): any[] => {
+        const newArray = [...array];
+        for (let i = newArray.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+        }
+        return newArray;
+      };
+      const shiftLeft = useCallback(() => {
+        setData(prevData => {
+          const shiftedData = [...prevData.slice(1), prevData[0]];
+          return shiftedData;
+        });
+      }, []);
+    
+      const shiftRight = useCallback(() => {
+        setData(prevData => {
+          const shiftedData = [prevData[prevData.length - 1], ...prevData.slice(0, prevData.length - 1)];
+          return shiftedData;
+        });
+      }, []);
+
+      const shuffleData = useCallback(() => {
+        setData(prevData => shuffle(prevData));
+      }, []);
     return (
         <div style={{ padding: '5%'}}>
+      <button onClick={shiftLeft}>Shift Left</button>
+      <button onClick={shiftRight}>Shift Right</button>
+      <button onClick={shuffleData}>Shuffle</button>
             <Radio.Group value='small' onChange={(e) => handleSelectLag(e.target.value)}>
                 <Radio.Button value="th">Thai</Radio.Button>
                 <Radio.Button value="en">Eng</Radio.Button>
@@ -126,32 +150,30 @@ function Home() {
                                 }} onClick={() => handleSelectMenu(v)}>
                                 <div style={v.css}/>
                             </div>
+                                <div style={{ 
+                                    display: 'flex', 
+                                    justifyContent: 'center',
+                                }}>{t(v.menu)}</div>
                         </Col>
                     ))}
                 </Row>
-                <Row justify={position.row_1} gutter={[8, 8]}>
-                    {Shapse?.map((v, i) => {
-                        if(i < 3)
-                        return(
-                            <Col span={4}>
-                                <div style={{ backgroundColor: '#6eda78', padding: '12px', borderRadius: '12px', display: 'flex', justifyContent: 'center' }}>
-                                    <div style={v}/>
-                                </div>
-                            </Col>
-                        )
-                    })}
+                <Row justify={position.top} gutter={[8, 8]}>
+                    {data.slice(0, 3).map((item, index) => (
+                        <Col span={4}>
+                        <div style={{ backgroundColor: '#6eda78', padding: '12px', borderRadius: '12px', display: 'flex', justifyContent: 'center' }}>
+                            <div style={item}/>
+                        </div>
+                    </Col>
+                    ))}
                 </Row>
-                <Row justify={position.row_2} gutter={[8, 8]}>
-                    {Shapse?.map((v, i) => {
-                        if(i > 2)
-                        return(
-                            <Col span={4}>
-                                <div style={{ backgroundColor: '#6eda78', padding: '12px', borderRadius: '12px', display: 'flex', justifyContent: 'center' }}>
-                                    <div style={v}/>
-                                </div>
-                            </Col>
-                        )
-                    })}
+                <Row justify={position.bottom} gutter={[8, 8]}>
+                    {data.slice(3, ).map((item, index) => (
+                        <Col span={4}>
+                        <div style={{ backgroundColor: '#6eda78', padding: '12px', borderRadius: '12px', display: 'flex', justifyContent: 'center' }}>
+                            <div style={item}/>
+                        </div>
+                    </Col>
+                    ))}
                 </Row>
             </div>
         </div>

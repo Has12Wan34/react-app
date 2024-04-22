@@ -4,6 +4,10 @@ import { initReactI18next } from "react-i18next";
 const resources = {
   en: {
     translation: {
+      "Move_left": "Move left",
+      "Move_top": "Move top",
+      "Move_bottom": "Move bottom",
+      "Move_rigth": "Move rigth",
       "Travel App": "Travel App",
       "Around the world": "Around the world",
       "See More": "See More"
@@ -11,7 +15,10 @@ const resources = {
   },
   th: {
     translation: {
-      "Travel App": "แอปท่องเที่ยว",
+      "Move_left": "เลื่อนซ้าย",
+      "Move_top": "ย้ายขึ้นบน",
+      "Move_bottom": "ย้ายลงล่าง",
+      "Move_rigth": "เลื่อนขวา",
       "Around the world": "ท่องเที่ยวรอบโลก",
       "See More": "ดูรายละเอียด"
     }

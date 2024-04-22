@@ -83,6 +83,7 @@ function FormComponent(){
   const [record, setRecord] = useState<React.Key[]>([]);
 
   const handleTableChange: TableProps['onChange'] = (pagination, filters, sorter) => {
+    console.log(sorter)
       setTableParams({
         pagination,
       });
@@ -100,6 +101,9 @@ function FormComponent(){
     {
       title: 'FirstName',
       dataIndex: 'fname',
+      // sorter: (a, b) => a.fname.length - b.fname.length,
+      sorter: true,
+      // sortOrder: sortedInfo.columnKey === 'name' ? sortedInfo.order : null,
     },
     {
       title: 'LastName',
