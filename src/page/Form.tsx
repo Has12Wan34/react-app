@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { addUser, removeUser, fetchUserById } from '../features/user/userSlice';
 import { useTypedSelector, useAppDispatch } from '../store/stateStore';
-import { Space, Button, DatePicker, Form, Input, InputNumber, Select, Table } from 'antd';
+import { Space, Button, DatePicker, Form, Input, InputNumber, Select, Table, Radio } from 'antd';
 import { GetProp, TableProps, TableColumnsType } from 'antd';
 
 const formItemLayout = {
@@ -27,12 +27,15 @@ const options = {
 };
 
 interface Users {
+  key: string;
   prefix: string;
   fname: string;
   lname: string;
-  passport: string;
-  amount: number | null;
+  passport: string | undefined;
+  cardnumbe: string;
+  salary: number | null;
   gender: string;
+  phonenumber: string | undefined;
   nationality: string;
   birthdate: string;
 };
@@ -55,14 +58,17 @@ function FormComponent(){
   },[user])
 
   const [form, setForm] = useState<Users>({
+    key: '',
     prefix: '',
     fname: '',
     lname: '',
-    passport: '',
-    amount: null,
-    gender: '',
+    birthdate: '',
     nationality: '',
-    birthdate: ''
+    cardnumbe: '',
+    passport: '',
+    phonenumber: '',
+    salary: null,
+    gender: '',
   });
 
   const handleInputForm = (key:string, value: string | null | string[] | number) => {
@@ -79,13 +85,12 @@ function FormComponent(){
   const [tableParams, setTableParams] = useState<TableParams>({
     pagination: {
       current: 1,
-      pageSize: 2,
+      pageSize: 10,
     }
   });
 
   const [record, setRecord] = useState<React.Key[]>([]);
 
-  console.log(tableParams.sorter?.columnKey)
   const handleTableChange: TableProps['onChange'] = (pagination, filters, sorter) => {
       setTableParams(() => ({
         pagination,
@@ -103,16 +108,25 @@ function FormComponent(){
 
   const columns: TableColumnsType<Users> = [
     {
-      title: 'FirstName',
+      title: 'ชื่อ-นามสกุล',
       dataIndex: 'fname',
       key: 'fname',
-      sorter: (a, b) => a.fname.localeCompare(b.fname),
+      render: (_, record) => <p>{record?.fname} {record?.lname}</p>,
+      sorter: (a, b) => a?.fname.localeCompare(b?.fname),
       sortOrder: tableParams.sorter?.columnKey === 'fname' ? tableParams.sorter?.order : null,
     },
     {
-      title: 'LastName',
-      dataIndex: 'lname',
-    },
+     title: 'เพศ',
+      dataIndex: 'gender',
+    }, 
+    {
+      title: 'หมายเลขเบอร์โทร',
+       dataIndex: 'phonenumber',
+    }, 
+    {
+      title: 'สัญชาติ',
+       dataIndex: 'nationality',
+    }, 
     {
       title: 'Action',
       key: 'action',
@@ -125,7 +139,7 @@ function FormComponent(){
   ];
 
   return(
-    <div style={{ padding: '5%'}}>
+    <div style={{ padding: '5%', backgroundImage: 'linear-gradient(to right, #6eda78, #ffa200)'}}>
       <Form {...formItemLayout} variant="filled" style={{ paddingTop: '1%', border: 'solid'}}>
         <Form.Item 
           label="คำนำหน้า" 
@@ -134,51 +148,42 @@ function FormComponent(){
           <Select 
             placeholder="โปรดระบุคำนำหน้า"
             options={options.prefix}
-            value={form.prefix}
+            value={form?.prefix}
             onChange={(value) => handleInputForm('prefix', value)}/>
         </Form.Item>
 
         <Form.Item 
           label="ชื่อจริง" 
+          name="fname" 
           rules={[{ required: true, message: 'โปรดระบุชื่อจจริง' }]}>
           <Input 
             name="fname" 
-            value={form.fname} 
+            value={form?.fname} 
             placeholder="โปรดระบุชื่อจริง" 
             onChange={(e) => handleInputForm(e.target.name, e.target.value)}/>
         </Form.Item>
 
         <Form.Item 
-          label="นามสกุล" 
+          label="นามสกุล"
+          name="lname"  
           rules={[{ required: true, message: 'โปรดระบุนามสกุล' }]}>
           <Input 
             name="lname" 
-            value={form.lname} 
+            value={form?.lname} 
             placeholder="โปรดระบุนามสกุล" 
             onChange={(e) => handleInputForm(e.target.name, e.target.value)}/>
         </Form.Item>
 
         <Form.Item
-          label="เงินเดือนที่คาดหวัง"
-          name="amount"
-          rules={[{ required: true, message: 'โปรดระบุเงินเดือนที่คาดหวัง' }]}
-        >
-          <InputNumber 
-            placeholder="โปรดระบุเงินเดือนที่คาดหวัง" 
-            style={{ width: '100%' }} 
-            value={form.amount} 
-            onChange={(value) => handleInputForm('amount', value)}/>
-        </Form.Item>
-
-        <Form.Item
-          label="หนังสือเดินทาง"
+          label="วันเกิด"
+          name="birthdate"
           rules={[{ required: true, message: 'Please input!' }]}
-          >
-          <Input.TextArea 
-            name="passport"
-            placeholder="โปรดระบุหนังสือเดินทาง" 
-            value={form.passport} 
-            onChange={(e) => handleInputForm(e.target.name, e.target.value)}/>
+        >
+          <DatePicker 
+            format={{
+              format: 'YYYY-MM-DD',
+            }}
+            onChange={(date, dateString) => handleInputForm('birthdate', dateString)}/>
         </Form.Item>
 
         <Form.Item 
@@ -188,20 +193,64 @@ function FormComponent(){
             <Select 
               placeholder="โปรดระบุสัญชาติ"
               options={options.nationality}
-              value={form.nationality}
+              value={form?.nationality}
               onChange={(value) => handleInputForm('nationality', value)}/>
         </Form.Item>
 
+        <Form.Item 
+          label="เลขบัตรประชาชน" 
+          name="cardnumbe" 
+          rules={[{ required: true, message: 'โปรดระบุเลขบัตรประชาชน' }]}>
+          <Input.OTP 
+            length={13} 
+            value={form?.cardnumbe} 
+            onChange={(value) => handleInputForm('cardnumbe', value)}/>
+        </Form.Item>
+
+        <Form.Item 
+          label="ระบุเพศ"
+          name="gender" 
+          rules={[{ required: true, message: 'โปรดระบุเพศ' }]}>
+          <Radio.Group
+            value={form?.gender}
+            onChange={(e) => handleInputForm('gender', e.target.value)}>
+            <Radio value="man">ผู้ชาย</Radio>
+            <Radio value="woman">ผู้หญิง</Radio>
+            <Radio value="-">ไม่ระบุ</Radio>
+          </Radio.Group>
+        </Form.Item>
+
+        <Form.Item 
+          label="หมายเลขโทรศัพท์" 
+          name="phonenumber" 
+          rules={[{ required: true, message: 'โปรดระบุหมายเลขโทรศัพท์' }]}>
+          <Input.OTP 
+            length={10} 
+            value={form?.phonenumber} 
+            onChange={(value) => handleInputForm('phonenumber', value)} />
+        </Form.Item>
+
         <Form.Item
-          label="DatePicker"
-          name="DatePicker"
-          rules={[{ required: true, message: 'Please input!' }]}
+          label="หนังสือเดินทาง"
+          rules={[{ required: true, message: 'โปรดระบุหนังสือเดินทาง' }]}
+          >
+          <Input.TextArea 
+            name="passport"
+            placeholder="โปรดระบุหนังสือเดินทาง" 
+            value={form?.passport} 
+            onChange={(e) => handleInputForm(e.target.name, e.target.value)}/>
+        </Form.Item>
+
+        <Form.Item
+          label="เงินเดือนที่คาดหวัง"
+          name="salary"
+          rules={[{ required: true, message: 'โปรดระบุเงินเดือนที่คาดหวัง' }]}
         >
-          <DatePicker 
-            format={{
-              format: 'YYYY-MM-DD',
-            }}
-            onChange={(date, dateString) => handleInputForm('birthdate', dateString)}/>
+          <InputNumber 
+            placeholder="โปรดระบุเงินเดือนที่คาดหวัง" 
+            style={{ width: '100%' }} 
+            value={form?.salary} 
+            onChange={(value) => handleInputForm('salary', value)}/>
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
@@ -214,7 +263,7 @@ function FormComponent(){
       <Table 
         columns={columns} 
         dataSource={users} 
-        rowKey={(record) => record.fname}
+        rowKey={(record) => record?.key}
         rowSelection={{
           onChange: onSelectChange,
         }} 

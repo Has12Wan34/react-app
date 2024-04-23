@@ -2,17 +2,20 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 interface userInitialStateType {
     users: Users[] | undefined | [];
-    user: Users | {} | null | undefined;
+    user: Users | null;
     status: string | null | undefined;
     error: string | null | undefined;
 };
 
 interface Users {
+    key: string;
     prefix: string;
     fname: string;
     lname: string;
-    passport: string;
-    amount: number | null;
+    passport: string | undefined;
+    phonenumber: string | undefined;
+    cardnumbe: string;
+    salary: number | null;
     gender: string;
     nationality: string;
     birthdate: string;
@@ -20,7 +23,7 @@ interface Users {
 
 const initialState : userInitialStateType = {
     users: [],
-    user: {},
+    user: null,
     status: 'idle',
     error: null
 };
@@ -42,6 +45,8 @@ export const editUser = createAsyncThunk(
 export const addUser = createAsyncThunk(
     'user/addUser',
     async (body:Users) => {
+        const id = Date.now().toString(36) + Math.random().toString(36).substr(2);
+        body.key = id;
         return body;
     }
 );
@@ -62,7 +67,8 @@ const userSlice = createSlice({
             const user = localStorage.getItem('user');
             if (users) {
               state.users = JSON.parse(users);
-            }else if (user) {
+            }
+            if (user) {
                 state.user = JSON.parse(user);
             }
         },
@@ -85,7 +91,7 @@ const userSlice = createSlice({
         })
         builder.addCase(removeUser.fulfilled, (state:any, action) => {
             state.status = 'succeeded';
-            const newUsers = state.users.filter((item: Users) => !action.payload.includes(item.fname));
+            const newUsers = state.users.filter((item: Users) => !action.payload.includes(item?.key));
             localStorage.setItem('users', JSON.stringify(newUsers));
             state.users = newUsers;
         })
@@ -113,7 +119,7 @@ const userSlice = createSlice({
             const targetIndex = state.users.findIndex((item: Users) => item.fname === action.payload.fname);
             state.users[targetIndex].name = action.payload.fname;
             state.users[targetIndex].lname = action.payload.lname;
-            state.users[targetIndex].amount = action.payload.amount;
+            state.users[targetIndex].salary = action.payload.salary;
         })
         builder.addCase(editUser.rejected, (state:any, action) => {
             state.status = 'failed';
