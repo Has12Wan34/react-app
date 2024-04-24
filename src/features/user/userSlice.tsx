@@ -13,7 +13,7 @@ interface Users {
     fname: string;
     lname: string;
     passport: string | undefined;
-    phonenumber: string | undefined;
+    phonenumber: string;
     cardnumber: string;
     salary: number | null;
     gender: string;
