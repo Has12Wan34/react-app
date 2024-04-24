@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Radio, Row, Col, Divider } from "antd";
+import { Row, Col } from "antd";
 import { useTranslation } from 'react-i18next';
 
 const Shapse = [
@@ -72,8 +72,9 @@ const Shapse_Menu: ShapseMenu[] = [
 ];
 
 type Position = {
-    top : 'center' | 'end' | undefined,
-    bottom : 'end' | 'center' | undefined,
+    select_menu : string | undefined;
+    top : 'center' | 'end' | undefined;
+    bottom : 'end' | 'center' | undefined;
 };
 
 type ShapseMenu = {
@@ -85,21 +86,26 @@ function Home() {
     const { t, i18n } = useTranslation();
 
     const [position, setPosition] = useState<Position>({
+        select_menu: 'Move_top',
         top : 'center',
         bottom : 'end',
     });
 
     const handleSelectMenu = (value:ShapseMenu) => {
-        setPosition((s) => ({
-            ...s,
-            top : position.bottom,
-            bottom : position.top,
-        }))
+        if(value.menu === 'Move_left'){
+            shiftLeft();
+        }else if(value.menu === 'Move_rigth'){
+            shiftRight();
+        }else if(value.menu !== position.select_menu){
+            setPosition((s) => ({
+                ...s,
+                select_menu: value.menu,
+                top : position.bottom,
+                bottom : position.top,
+            }));
+        }
     };
 
-    const handleSelectLag = (lang:string) => {
-        i18n.changeLanguage(lang);
-    };
     const [data, setData] = useState(Shapse);
 
     const shuffle = (array: any[]): any[] => {
@@ -129,14 +135,7 @@ function Home() {
       }, []);
     return (
         <div>
-      <button onClick={shiftLeft}>Shift Left</button>
-      <button onClick={shiftRight}>Shift Right</button>
-      <button onClick={shuffleData}>Shuffle</button>
-            <Radio.Group value='small' onChange={(e) => handleSelectLag(e.target.value)}>
-                <Radio.Button value="th">Thai</Radio.Button>
-                <Radio.Button value="en">Eng</Radio.Button>
-            </Radio.Group>
-            <div style={{ padding: '2%' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '300px' }}>
                 <Row justify="center" gutter={[8, 8]}>
                     {Shapse_Menu?.map((v, i) => (
                         <Col span={4}>
@@ -153,14 +152,22 @@ function Home() {
                                 <div style={{ 
                                     display: 'flex', 
                                     justifyContent: 'center',
-                                }}>{t(v.menu)}</div>
+                                }}>
+                                    <div style={{ 
+                                        marginTop: '-7px',
+                                        borderRadius: '12px',
+                                        padding: '2px 10px', 
+                                        backgroundColor: 'red', 
+                                }}>{t(v.menu)}</div></div>
                         </Col>
                     ))}
                 </Row>
                 <Row justify={position.top} gutter={[8, 8]}>
                     {data.slice(0, 3).map((item, index) => (
                         <Col span={4}>
-                        <div style={{ backgroundColor: '#6eda78', padding: '12px', borderRadius: '12px', display: 'flex', justifyContent: 'center' }}>
+                        <div 
+                            style={{ backgroundColor: '#6eda78', padding: '12px', borderRadius: '12px', display: 'flex', justifyContent: 'center' }}
+                            onClick={shuffleData}>
                             <div style={item}/>
                         </div>
                     </Col>
@@ -169,7 +176,9 @@ function Home() {
                 <Row justify={position.bottom} gutter={[8, 8]}>
                     {data.slice(3, ).map((item, index) => (
                         <Col span={4}>
-                        <div style={{ backgroundColor: '#6eda78', padding: '12px', borderRadius: '12px', display: 'flex', justifyContent: 'center' }}>
+                        <div 
+                            style={{ backgroundColor: '#6eda78', padding: '12px', borderRadius: '12px', display: 'flex', justifyContent: 'center' }}
+                            onClick={shuffleData}>
                             <div style={item}/>
                         </div>
                     </Col>
