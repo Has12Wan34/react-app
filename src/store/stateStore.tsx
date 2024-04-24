@@ -2,13 +2,15 @@ import { configureStore } from '@reduxjs/toolkit';
 import { userServices } from '../features/user/userSlice';
 import userReducer from '../features/user/userSlice';
 import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
+import { error } from 'console';
 
 const store = configureStore({
   reducer: {
     users: userReducer,
     user: userReducer,
+    status: userReducer,
+    error: userReducer,
   },
-  
 });
 
 store.dispatch(userServices.actions.initializeDataFromLocalStorage());

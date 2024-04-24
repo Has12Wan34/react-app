@@ -30,24 +30,51 @@ const initialState : userInitialStateType = {
 
 export const fetchUser = createAsyncThunk(
     'user/fetchUser',
-    async (body:Users) => {
-        return body;
+    async (id:string) => {
+        const job = new Promise<string>((resolve, reject) => {
+            setTimeout(() => {
+              if (id) {
+                resolve(id);
+              } else {
+                reject(Error("id required"));
+              }
+            }, 1000);
+          });
+        return await job;
     }
 );
 
 export const editUser = createAsyncThunk(
     'user/editUser',
     async (body:Users) => {
-        return body;
+        const job = new Promise<Users>((resolve, reject) => {
+            setTimeout(() => {
+              if (body && Object.keys(body).length > 0) {
+                resolve(body);
+              } else {
+                reject(Error("body required"));
+              }
+            }, 1000);
+          });
+        return await job;
     }
 );
 
 export const addUser = createAsyncThunk(
     'user/addUser',
     async (body:Users) => {
-        const id = Date.now().toString(36) + Math.random().toString(36).substr(2);
-        body.key = id;
-        return body;
+        const job = new Promise<Users>((resolve, reject) => {
+            setTimeout(() => {
+              if (body && Object.keys(body).length > 0) {
+                const id = Date.now().toString(36) + Math.random().toString(36).substr(2);
+                body.key = id;
+                resolve(body);
+              } else {
+                reject(Error("body required"));
+              }
+            }, 1000);
+          });
+        return await job;
     }
 );
 
@@ -104,8 +131,9 @@ const userSlice = createSlice({
         })
         builder.addCase(fetchUser.fulfilled, (state:any, action) => {
             state.status = 'succeeded';
-            localStorage.setItem('user', JSON.stringify(action.payload));
-            state.user = action.payload;
+            const user = state.users.find((item: Users) => item.key === action.payload)
+            localStorage.setItem('user', JSON.stringify(user));
+            state.user = user;
         })
         builder.addCase(fetchUser.rejected, (state:any, action) => {
             state.status = 'failed';
@@ -127,6 +155,8 @@ const userSlice = createSlice({
             state.users[targetIndex].phonenumber = action.payload.phonenumber;
             state.users[targetIndex].salary = action.payload.salary;
             state.users[targetIndex].gender = action.payload.gender;
+            localStorage.setItem('user', JSON.stringify(state.users[targetIndex]));
+            localStorage.setItem('users', JSON.stringify(state.users));
         })
         builder.addCase(editUser.rejected, (state:any, action) => {
             state.status = 'failed';

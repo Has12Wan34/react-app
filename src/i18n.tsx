@@ -43,10 +43,15 @@ const resources = {
       "woman": "Woman",
       "other": "Other",
       "submit": "Submit",
+      "save": "Save",
       "clear": "Clear",
       "delete": "Delete",
       "fname_lname": "FirstName LastName",
-      "action": "Action"
+      "action": "Action",
+      "thai": "Thai",
+      "mr": "Mr.",
+      "ms": "Ms.",
+      "mrs": "Mrs.",
     }
   },
   TH: {
@@ -86,14 +91,19 @@ const resources = {
       "err_phonenumber": "*โปรดระบุเบอร์มือถือ",
       "err_salary": "*โปรดระบุเงินเดือน",
       "err_gender": "*โปรดระบุเพศ",
-      "man": "ผู้ชาย",
-      "woman": "ผู้หญิง",
+      "man": "ชาย",
+      "woman": "หญิง",
       "other": "อื่นๆ",
       "submit": "บันทึก",
+      "save": "แก้ไข",
       "clear": "ล้างข้อมูล",
       "delete": "ลบข้อมูล",
       "fname_lname": "ชื่อ-นามสกุล",
-      "action": "จัดการ"
+      "action": "จัดการ",
+      "thai": "ไทย",
+      "mr": "นาย",
+      "ms": "นส.",
+      "mrs": "นาง",
     }
   }
 };
