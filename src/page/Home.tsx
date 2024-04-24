@@ -128,7 +128,7 @@ function Home() {
         setData(prevData => shuffle(prevData));
       }, []);
     return (
-        <div style={{ padding: '5%'}}>
+        <div>
       <button onClick={shiftLeft}>Shift Left</button>
       <button onClick={shiftRight}>Shift Right</button>
       <button onClick={shuffleData}>Shuffle</button>

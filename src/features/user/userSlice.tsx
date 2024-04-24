@@ -14,7 +14,7 @@ interface Users {
     lname: string;
     passport: string | undefined;
     phonenumber: string | undefined;
-    cardnumbe: string;
+    cardnumber: string;
     salary: number | null;
     gender: string;
     nationality: string;
@@ -28,8 +28,8 @@ const initialState : userInitialStateType = {
     error: null
 };
 
-export const fetchUserById = createAsyncThunk(
-    'user/fetchUserById',
+export const fetchUser = createAsyncThunk(
+    'user/fetchUser',
     async (body:Users) => {
         return body;
     }
@@ -99,15 +99,15 @@ const userSlice = createSlice({
             state.status = 'failed';
             state.error = action.error.message;
         })
-        builder.addCase(fetchUserById.pending, (state) => {
+        builder.addCase(fetchUser.pending, (state) => {
             state.status = 'loading';
         })
-        builder.addCase(fetchUserById.fulfilled, (state:any, action) => {
+        builder.addCase(fetchUser.fulfilled, (state:any, action) => {
             state.status = 'succeeded';
             localStorage.setItem('user', JSON.stringify(action.payload));
             state.user = action.payload;
         })
-        builder.addCase(fetchUserById.rejected, (state:any, action) => {
+        builder.addCase(fetchUser.rejected, (state:any, action) => {
             state.status = 'failed';
             state.error = action.error.message;
         })
@@ -116,10 +116,17 @@ const userSlice = createSlice({
         })
         builder.addCase(editUser.fulfilled, (state:any, action) => {
             state.status = 'succeeded';
-            const targetIndex = state.users.findIndex((item: Users) => item.fname === action.payload.fname);
-            state.users[targetIndex].name = action.payload.fname;
+            const targetIndex = state.users.findIndex((item: Users) => item.key === action.payload.key);
+            state.users[targetIndex].prefix = action.payload.prefix;
+            state.users[targetIndex].fname = action.payload.fname;
             state.users[targetIndex].lname = action.payload.lname;
+            state.users[targetIndex].birthdate = action.payload.birthdate;
+            state.users[targetIndex].nationality = action.payload.nationality;
+            state.users[targetIndex].cardnumber = action.payload.cardnumber;
+            state.users[targetIndex].passport = action.payload.passport;
+            state.users[targetIndex].phonenumber = action.payload.phonenumber;
             state.users[targetIndex].salary = action.payload.salary;
+            state.users[targetIndex].gender = action.payload.gender;
         })
         builder.addCase(editUser.rejected, (state:any, action) => {
             state.status = 'failed';

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { addUser, removeUser, fetchUserById } from '../features/user/userSlice';
+import { addUser, removeUser, fetchUser } from '../features/user/userSlice';
 import { useTypedSelector, useAppDispatch } from '../store/stateStore';
 import { Space, Button, DatePicker, Form, Input, InputNumber, Select, Table, Radio } from 'antd';
 import { GetProp, TableProps, TableColumnsType } from 'antd';
+import { useTranslation } from 'react-i18next';
 
 const formItemLayout = {
   labelCol: {
@@ -32,7 +33,7 @@ interface Users {
   fname: string;
   lname: string;
   passport: string | undefined;
-  cardnumbe: string;
+  cardnumber: string;
   salary: number | null;
   gender: string;
   phonenumber: string | undefined;
@@ -50,6 +51,7 @@ interface TableParams {
 function FormComponent(){
 
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const users = useTypedSelector((state) => state.users.users);
   const user = useTypedSelector((state) => state.user.user);
 
@@ -64,7 +66,7 @@ function FormComponent(){
     lname: '',
     birthdate: '',
     nationality: '',
-    cardnumbe: '',
+    cardnumber: '',
     passport: '',
     phonenumber: '',
     salary: null,
@@ -108,7 +110,7 @@ function FormComponent(){
 
   const columns: TableColumnsType<Users> = [
     {
-      title: 'ชื่อ-นามสกุล',
+      title: t("fname_lname"),
       dataIndex: 'fname',
       key: 'fname',
       render: (_, record) => <p>{record?.fname} {record?.lname}</p>,
@@ -116,114 +118,118 @@ function FormComponent(){
       sortOrder: tableParams.sorter?.columnKey === 'fname' ? tableParams.sorter?.order : null,
     },
     {
-     title: 'เพศ',
+      title: t("gender"),
       dataIndex: 'gender',
+      sorter: (a, b) => a?.gender.localeCompare(b?.gender),
+      sortOrder: tableParams.sorter?.columnKey === 'gender' ? tableParams.sorter?.order : null,
     }, 
     {
-      title: 'หมายเลขเบอร์โทร',
-       dataIndex: 'phonenumber',
+      title: t("phonenumber"),
+      dataIndex: 'phonenumber',
     }, 
     {
-      title: 'สัญชาติ',
-       dataIndex: 'nationality',
+      title: t("nationality"),
+      dataIndex: 'nationality',
+      sorter: (a, b) => a?.nationality.localeCompare(b?.nationality),
     }, 
     {
-      title: 'Action',
+      title: t("action"),
       key: 'action',
       render: (_, record) => (
-        <Space size="middle" onClick={() => dispatch(fetchUserById(record))}>
-          <a>Detail</a>
+        <Space size="middle" onClick={() => dispatch(fetchUser(record))}>
+          <a>{t('Detail')}</a>
         </Space>
       ),
     },
   ];
 
   return(
-    <div style={{ padding: '5%', backgroundImage: 'linear-gradient(to right, #6eda78, #ffa200)'}}>
+    <div>
       <Form {...formItemLayout} variant="filled" style={{ paddingTop: '1%', border: 'solid'}}>
         <Form.Item 
-          label="คำนำหน้า" 
+          label={t("prefix")} 
           name="prefix" 
-          rules={[{ required: true, message: 'โปรดระบุคำนำหน้า' }]}>
+          rules={[{ required: true, message: t("err_prefix") }]}>
           <Select 
-            placeholder="โปรดระบุคำนำหน้า"
+            placeholder={t("detail_prefix")} 
             options={options.prefix}
             value={form?.prefix}
             onChange={(value) => handleInputForm('prefix', value)}/>
         </Form.Item>
 
         <Form.Item 
-          label="ชื่อจริง" 
+          label={t("fname")} 
           name="fname" 
-          rules={[{ required: true, message: 'โปรดระบุชื่อจจริง' }]}>
+          rules={[{ required: true, message: t("err_fname") }]}>
           <Input 
             name="fname" 
             value={form?.fname} 
-            placeholder="โปรดระบุชื่อจริง" 
+            placeholder={t("detail_fname")} 
             onChange={(e) => handleInputForm(e.target.name, e.target.value)}/>
         </Form.Item>
 
         <Form.Item 
-          label="นามสกุล"
+          label={t("lname")}
           name="lname"  
-          rules={[{ required: true, message: 'โปรดระบุนามสกุล' }]}>
+          rules={[{ required: true, message: t("err_lname") }]}>
           <Input 
             name="lname" 
             value={form?.lname} 
-            placeholder="โปรดระบุนามสกุล" 
+            placeholder={t("detail_lname")} 
             onChange={(e) => handleInputForm(e.target.name, e.target.value)}/>
         </Form.Item>
 
         <Form.Item
-          label="วันเกิด"
+          label={t("birthdate")}
           name="birthdate"
-          rules={[{ required: true, message: 'Please input!' }]}
+          rules={[{ required: true, message: t("err_birthdate") }]}
         >
           <DatePicker 
             format={{
               format: 'YYYY-MM-DD',
             }}
+            placeholder={t("detail_birthdate")} 
             onChange={(date, dateString) => handleInputForm('birthdate', dateString)}/>
         </Form.Item>
 
         <Form.Item 
-          label="สัญชาติ" 
+          label={t("nationality")} 
           name="nationality" 
-          rules={[{ required: true, message: 'โปรดระบุสัญชาติ' }]}>
+          rules={[{ required: true, message: t("err_nationality") }]}>
             <Select 
-              placeholder="โปรดระบุสัญชาติ"
+              placeholder={t("detail_nationality")} 
               options={options.nationality}
               value={form?.nationality}
               onChange={(value) => handleInputForm('nationality', value)}/>
         </Form.Item>
 
         <Form.Item 
-          label="เลขบัตรประชาชน" 
-          name="cardnumbe" 
-          rules={[{ required: true, message: 'โปรดระบุเลขบัตรประชาชน' }]}>
+          label={t("cardnumber")} 
+          name="cardnumber" 
+          rules={[{ required: true, message: t("err_cardnumber") }]}>
           <Input.OTP 
             length={13} 
-            value={form?.cardnumbe} 
-            onChange={(value) => handleInputForm('cardnumbe', value)}/>
+            value={form?.cardnumber} 
+            onChange={(value) => handleInputForm('cardnumber', value)}/>
         </Form.Item>
 
         <Form.Item 
-          label="ระบุเพศ"
+          label={t("gender")} 
           name="gender" 
-          rules={[{ required: true, message: 'โปรดระบุเพศ' }]}>
+          rules={[{ required: true, message: t("err_gender") }]}>
           <Radio.Group
             value={form?.gender}
             onChange={(e) => handleInputForm('gender', e.target.value)}>
-            <Radio value="man">ผู้ชาย</Radio>
-            <Radio value="woman">ผู้หญิง</Radio>
-            <Radio value="-">ไม่ระบุ</Radio>
+            <Radio value="man">{t("man")}</Radio>
+            <Radio value="woman">{t("woman")}</Radio>
+            <Radio value="-">{t("other")}</Radio>
           </Radio.Group>
         </Form.Item>
 
         <Form.Item 
-          label="หมายเลขโทรศัพท์" 
+          label={t("phonenumber")}
           name="phonenumber" 
-          rules={[{ required: true, message: 'โปรดระบุหมายเลขโทรศัพท์' }]}>
+          rules={[{ required: true, message: t("err_phonenumber") }]}>
           <Input.OTP 
             length={10} 
             value={form?.phonenumber} 
@@ -231,23 +237,23 @@ function FormComponent(){
         </Form.Item>
 
         <Form.Item
-          label="หนังสือเดินทาง"
-          rules={[{ required: true, message: 'โปรดระบุหนังสือเดินทาง' }]}
+          label={t("passport")}
+          rules={[{ required: true, message: t("err_passport") }]}
           >
           <Input.TextArea 
             name="passport"
-            placeholder="โปรดระบุหนังสือเดินทาง" 
+            placeholder={t("detail_passport")} 
             value={form?.passport} 
             onChange={(e) => handleInputForm(e.target.name, e.target.value)}/>
         </Form.Item>
 
         <Form.Item
-          label="เงินเดือนที่คาดหวัง"
+          label={t("salary")}
           name="salary"
-          rules={[{ required: true, message: 'โปรดระบุเงินเดือนที่คาดหวัง' }]}
+          rules={[{ required: true, message: t("err_salary") }]}
         >
-          <InputNumber 
-            placeholder="โปรดระบุเงินเดือนที่คาดหวัง" 
+          <InputNumber
+            placeholder={t("detail_salary")} 
             style={{ width: '100%' }} 
             value={form?.salary} 
             onChange={(value) => handleInputForm('salary', value)}/>
@@ -255,11 +261,14 @@ function FormComponent(){
 
         <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
           <Button type="primary" htmlType="button" onClick={handleSubmit}>
-            Submit
+            {t("submit")}
+          </Button>
+          <Button type="primary" htmlType="button" onClick={handleSubmit}>
+            {t("clear")}
           </Button>
         </Form.Item>
       </Form>
-      <Button type="primary" htmlType="button" onClick={saveRemoveUser}>DELETE</Button>
+      <Button type="primary" htmlType="button" onClick={saveRemoveUser}>{t('delete')}</Button>
       <Table 
         columns={columns} 
         dataSource={users} 
