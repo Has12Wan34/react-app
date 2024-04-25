@@ -1,0 +1,45 @@
+.style {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 300px;
+}
+
+.col {
+    display: flex;
+    justify-content: center;
+    padding: 20px 12px;
+    border-radius: 12px;
+    background-color: #ffffff;
+    cursor: pointer;
+}
+
+.col:hover {
+    background-color: #ffa200;
+}
+
+.col-menu {
+    display: flex;
+    justify-content: center;
+}
+
+.col-shape {
+    display: flex;
+    justify-content: center;
+    border-radius: 12px;
+    padding: 20px 12px;
+    background-color: #ffffff;
+    cursor: pointer;
+}
+
+.col-shape:hover {
+    background-color: #ffa200;
+}
+
+.col-text {
+    margin-top: -7px;
+    border-radius: 12px;
+    padding: 2px 10px;
+    background-color: #6eda78;
+    color: #ffffff;
+}

@@ -5,7 +5,7 @@ import { Position, ShapseMenu } from "../models/styles";
 import { Shapse, Shapse_Menu } from "../mockup/style";
 
 function Home() {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
     const [position, setPosition] = useState<Position>({
         select_menu: 'Move_top',
@@ -37,77 +37,63 @@ function Home() {
           [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
         }
         return newArray;
-      };
-      const shiftLeft = useCallback(() => {
-        setData(prevData => {
-          const shiftedData = [...prevData.slice(1), prevData[0]];
-          return shiftedData;
-        });
-      }, []);
-    
-      const shiftRight = useCallback(() => {
-        setData(prevData => {
-          const shiftedData = [prevData[prevData.length - 1], ...prevData.slice(0, prevData.length - 1)];
-          return shiftedData;
-        });
-      }, []);
+    };
 
-      const shuffleData = useCallback(() => {
+    const shiftLeft = useCallback(() => {
+        setData(prevData => {
+            const shiftedData = [...prevData.slice(1), prevData[0]];
+            return shiftedData;
+        });
+    }, []);
+    
+    const shiftRight = useCallback(() => {
+        setData(prevData => {
+            const shiftedData = [prevData[prevData.length - 1], ...prevData.slice(0, prevData.length - 1)];
+            return shiftedData;
+        });
+    }, []);
+
+    const shuffleData = useCallback(() => {
         setData(prevData => shuffle(prevData));
-      }, []);
+    }, []);
+
     return (
-        <div>
-            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '300px' }}>
-                <Row justify="center" gutter={[8, 8]}>
-                    {Shapse_Menu?.map((v, i) => (
-                        <Col span={4}>
-                            <div 
-                                style={{ 
-                                    display: 'flex', 
-                                    padding: '12px', 
-                                    borderRadius: '12px', 
-                                    backgroundColor: '#6eda78', 
-                                    justifyContent: 'center' ,
-                                }} onClick={() => handleSelectMenu(v)}>
-                                <div style={v.css}/>
-                            </div>
-                                <div style={{ 
-                                    display: 'flex', 
-                                    justifyContent: 'center',
-                                }}>
-                                    <div style={{ 
-                                        marginTop: '-7px',
-                                        borderRadius: '12px',
-                                        padding: '2px 10px', 
-                                        backgroundColor: 'red', 
-                                }}>{t(v.menu)}</div></div>
-                        </Col>
-                    ))}
-                </Row>
-                <Row justify={position.top} gutter={[8, 8]}>
-                    {data.slice(0, 3).map((item, index) => (
-                        <Col span={4}>
+        <div className="style">
+            <Row className="col-menu" justify="center" gutter={[8, 8]}>
+                {Shapse_Menu?.map((v, i) => (
+                    <Col span={4} key={i}>
+                        <div className="col" onClick={() => handleSelectMenu(v)}>
+                            <div style={v.css}/>
+                        </div>
+                        <div className="col-menu">
+                            <div className='col-text'>{t(v.menu)}</div>
+                        </div>
+                    </Col>
+                ))}
+            </Row>
+            <Row justify={position.top} gutter={[8, 8]}>
+                {data.slice(0, 3).map((item, i) => (
+                    <Col span={4} key={i}>
                         <div 
-                            style={{ backgroundColor: '#6eda78', padding: '12px', borderRadius: '12px', display: 'flex', justifyContent: 'center' }}
+                            className="col-shape"
                             onClick={shuffleData}>
                             <div style={item}/>
                         </div>
                     </Col>
-                    ))}
-                </Row>
-                <Row justify={position.bottom} gutter={[8, 8]}>
-                    {data.slice(3, ).map((item, index) => (
-                        <Col span={4}>
+                ))}
+            </Row>
+            <Row justify={position.bottom} gutter={[8, 8]}>
+                {data.slice(3, ).map((item, i) => (
+                    <Col span={4} key={i}>
                         <div 
-                            style={{ backgroundColor: '#6eda78', padding: '12px', borderRadius: '12px', display: 'flex', justifyContent: 'center' }}
+                            className="col-shape"
                             onClick={shuffleData}>
                             <div style={item}/>
                         </div>
                     </Col>
-                    ))}
-                </Row>
-            </div>
+                ))}
+            </Row>
         </div>
-    )
+    );
 }
 export default Home

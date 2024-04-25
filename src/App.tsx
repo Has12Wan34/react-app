@@ -1,5 +1,7 @@
 import './App.css';
 import './styles/home.css';
+import './styles/form.css';
+import './styles/style.css';
 import { BrowserRouter, Routes, Route} from 'react-router-dom';
 import Home from './pages/Home';
 import Style from './pages/Style';

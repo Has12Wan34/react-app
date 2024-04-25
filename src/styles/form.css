@@ -1,0 +1,9 @@
+.form-component {
+    border-style: solid;
+    border-radius: 12px;
+    padding: 20px 0 0 20px;
+}
+
+.row-component {
+    padding: 10px 0;
+}

@@ -25,12 +25,12 @@ function Home() {
     return (
         <Row justify="center" gutter={[8, 8]}>
             {Menu?.map((v, i) => (
-                <Col span={4}>
+                <Col span={4} key={i}>
                     <div className="menu-item">
-                        <Link to={`/${v.value}`}>
+                        <a href={`/${v.value}`}>
                             <Typography.Title level={3}>{v.title}</Typography.Title>
                             <Typography.Title level={5}>{v.detail}</Typography.Title>
-                        </Link>
+                        </a>
                     </div>
                 </Col>
             ))}

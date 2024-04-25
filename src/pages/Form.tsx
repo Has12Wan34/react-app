@@ -137,20 +137,25 @@ function FormComponent(){
     {
       title: t("gender"),
       dataIndex: 'gender',
+      key: 'gender',
+      render: (_, record) => (<p>{t(record.gender)}</p>),
       sorter: (a, b) => a?.gender.localeCompare(b?.gender),
       sortOrder: tableParams.sorter?.columnKey === 'gender' ? tableParams.sorter?.order : null,
-      render: (_, record) => (<p>{t(record.gender)}</p>)
     }, 
     {
       title: t("phonenumber"),
       dataIndex: 'phonenumber',
+      key: 'phonenumber',
       sorter: (a, b) => a?.phonenumber.localeCompare(b?.phonenumber),
+      sortOrder: tableParams.sorter?.columnKey === 'phonenumber' ? tableParams.sorter?.order : null,
     }, 
     {
       title: t("nationality"),
       dataIndex: 'nationality',
+      key: 'nationality',
       sorter: (a, b) => a?.nationality.localeCompare(b?.nationality),
-      render: (_, record) => (<p>{t(record.nationality)}</p>)
+      render: (_, record) => (<p>{t(record.nationality)}</p>),
+      sortOrder: tableParams.sorter?.columnKey === 'nationality' ? tableParams.sorter?.order : null,
     }, 
     {
       title: t("action"),
@@ -168,7 +173,7 @@ function FormComponent(){
   return(
     <div>
       <Spin spinning={store_data.users.status === 'loading' || store_data.user.status === 'loading'} size="large" delay={500}>
-        <Form variant="filled" style={{ border: 'solid', borderRadius: '12px', padding: '20px 0 0 20px'}}>
+        <Form variant="filled" className="form-component">
           <Row gutter={[8, 8]}>
             <Col>
               <Form.Item 
@@ -289,7 +294,6 @@ function FormComponent(){
             >
               <InputNumber
                 placeholder={t("detail_salary")} 
-                style={{ width: '100%' }} 
                 value={form?.salary} 
                 onChange={(value) => handleInputForm('salary', value)}/>
             </Form.Item>
@@ -319,7 +323,7 @@ function FormComponent(){
         </Form>
       </Spin>
 
-      <Row style={{ padding: '10px 0' }}>
+      <Row className="row-component">
         {record?.length > 0 &&
           <Button type="primary" htmlType="button" onClick={saveRemoveUser}>{t('delete')}</Button>
         }
