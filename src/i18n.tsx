@@ -52,6 +52,10 @@ const resources = {
       "mr": "Mr.",
       "ms": "Ms.",
       "mrs": "Mrs.",
+      "test": "Test",
+      "layout_style": "Layout & Style",
+      "form_table": "Form & Table",
+      "home": "Home",
     }
   },
   TH: {
@@ -104,6 +108,10 @@ const resources = {
       "mr": "นาย",
       "ms": "นส.",
       "mrs": "นาง",
+      "test": "แบบทดสอบ",
+      "layout_style": "กาจัดการหน้าเว็บ",
+      "form_table": "กาจัดการหน้าฟอร์ม",
+      "home": "หน้าหลัก",
     }
   }
 };

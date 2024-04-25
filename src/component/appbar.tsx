@@ -1,7 +1,8 @@
 import { ReactNode, useEffect } from 'react';
-import { Layout, Dropdown, Button, Space } from 'antd';
+import { Layout, Dropdown, Button, Space, Menu } from 'antd';
 import type { MenuProps } from 'antd';
 import { useTranslation } from 'react-i18next';
+import { redirect } from "react-router-dom";
 
 const { Header, Content } = Layout;
 
@@ -18,12 +19,27 @@ const Lang = [
     key: 'TH',
     label: 'TH',
   }
-]
+];
 
 const App = (prop : FooProps) => {
 
   const { t, i18n } = useTranslation();
   const lang = localStorage.getItem('lang');
+
+  const TapMenu = [
+    {
+      key: 'home',
+      label: t('home'),
+    },
+    {
+      key: 'layout_style',
+      label: t('layout_style'),
+    },
+    {
+      key: 'form_table',
+      label: t('form_table'),
+    }
+];
 
   useEffect(() => {
     if(lang){
@@ -41,6 +57,10 @@ const App = (prop : FooProps) => {
     onClick: handleMenuClick,
   };
 
+  const onClick: MenuProps['onClick'] = (e) => {
+    redirect(`/${e.key}`);
+  };
+
   return (
     <Layout>
       <Header
@@ -54,6 +74,14 @@ const App = (prop : FooProps) => {
           justifyContent: 'end',
         }}
       >
+        <Menu
+          theme="dark"
+          mode="horizontal"
+          selectedKeys={[window.location.href.split('/')[3] || 'home']}
+          items={TapMenu}
+          style={{ flex: 1, minWidth: 0 }}
+          onClick={onClick}
+        />
       <Dropdown
         menu={menuProps}>
         <Button>
