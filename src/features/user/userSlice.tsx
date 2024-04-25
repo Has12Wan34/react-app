@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { Users, userInitialStateType } from '../../models/form';
 
+// สร้าง initialState เริ่มต้นสำหรับสถานะ
 const initialState : userInitialStateType = {
     users: [],
     user: null,
@@ -8,6 +9,7 @@ const initialState : userInitialStateType = {
     error: null
 };
 
+// สร้างฟังก์ชันสำหรับดึงข้อมูลผู้ใช้
 export const fetchUser = createAsyncThunk(
     'user/fetchUser',
     async (id:string) => {
@@ -24,6 +26,7 @@ export const fetchUser = createAsyncThunk(
     }
 );
 
+// สร้างฟังก์ชันสำหรับแก้ไขข้อมูลผู้ใช้
 export const editUser = createAsyncThunk(
     'user/editUser',
     async (body:Users) => {
@@ -40,6 +43,7 @@ export const editUser = createAsyncThunk(
     }
 );
 
+// สร้างฟังก์ชันสำหรับเพิ่มผู้ใช้ใหม่
 export const addUser = createAsyncThunk(
     'user/addUser',
     async (body:Users) => {
@@ -58,6 +62,7 @@ export const addUser = createAsyncThunk(
     }
 );
 
+// สร้างฟังก์ชันสำหรับลบผู้ใช้
 export const removeUser = createAsyncThunk(
     'user/removeUser',
     async (arr:React.Key[]) => {
@@ -65,10 +70,12 @@ export const removeUser = createAsyncThunk(
     }
 );
 
+// สร้าง Slice
 const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
+        // ฟังก์ชันเพื่อกำหนดค่าข้อมูลจาก Local Storage เมื่อโหลดแอปพลิเคชัน
         initializeDataFromLocalStorage: (state) => {
             const users = localStorage.getItem('users');
             const user = localStorage.getItem('user');
@@ -80,6 +87,7 @@ const userSlice = createSlice({
             }
         },
     },
+     // การจัดการผลลัพธ์ของฟังก์ชันที่สร้างขึ้นด้วย createAsyncThunk
     extraReducers: (builder) => {
         builder.addCase(addUser.pending, (state) => {
             state.status = 'loading';
@@ -145,9 +153,11 @@ const userSlice = createSlice({
     }
 });
 
+// สร้างการบริการสำหรับใช้งาน Slice
 export const userServices = {
     actions: userSlice.actions, 
 };
 
+// สร้าง Reducer
 const userReducer = userSlice.reducer 
 export default userReducer

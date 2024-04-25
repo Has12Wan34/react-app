@@ -16,11 +16,9 @@ interface TableParams {
 
 function FormComponent(){
 
-  const { t } = useTranslation();
-  const dispatch = useAppDispatch();
-  const users = useTypedSelector((state) => state.users.users);
-  const user = useTypedSelector((state) => state.user.user);
-  const store_data = useTypedSelector((state) => state);
+  const { t } = useTranslation(); 
+  const dispatch = useAppDispatch(); // เรียกใช้ hook เพื่อ dispatch actions
+  const { users, user, status } = useTypedSelector((state) => state.user); // เรียกใช้ hook เพื่อเข้าถึง state จาก store
   
   const [record, setRecord] = useState<React.Key[]>([]);
   const [tableParams, setTableParams] = useState<TableParams>({
@@ -172,7 +170,7 @@ function FormComponent(){
 
   return(
     <div>
-      <Spin spinning={store_data.users.status === 'loading' || store_data.user.status === 'loading'} size="large" delay={500}>
+      <Spin spinning={status === 'loading'} size="large" delay={500}>
         <Form variant="filled" className="form-component">
           <Row gutter={[8, 8]}>
             <Col>
