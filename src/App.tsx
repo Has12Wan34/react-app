@@ -1,9 +1,10 @@
 import './App.css';
+import './styles/home.css';
 import { BrowserRouter, Routes, Route} from 'react-router-dom';
-import Home from './page/Home';
-import Style from './page/Style';
-import Form from './page/Form';
-import Appbar from './component/appbar';
+import Home from './pages/Home';
+import Style from './pages/Style';
+import Form from './pages/Form';
+import Appbar from './components/appbar';
 
 function App() {
   return (

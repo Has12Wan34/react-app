@@ -1,25 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-
-interface userInitialStateType {
-    users: Users[] | undefined | [];
-    user: Users | null;
-    status: string | null | undefined;
-    error: string | null | undefined;
-};
-
-interface Users {
-    key: string;
-    prefix: string;
-    fname: string;
-    lname: string;
-    passport: string | undefined;
-    phonenumber: string;
-    cardnumber: string;
-    salary: number | null;
-    gender: string;
-    nationality: string;
-    birthdate: string;
-}
+import { Users, userInitialStateType } from '../../models/form';
 
 const initialState : userInitialStateType = {
     users: [],

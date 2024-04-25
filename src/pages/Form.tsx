@@ -2,23 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { addUser, removeUser, fetchUser, editUser } from '../features/user/userSlice';
 import { useTypedSelector, useAppDispatch } from '../store/stateStore';
 import { Row, Col, Space, Button, DatePicker, Form, Input, InputNumber, Select, Table, Radio, Spin } from 'antd';
-import { GetProp, TableProps, TableColumnsType } from 'antd';
+import type { GetProp, TableProps, TableColumnsType } from 'antd';
 import { useTranslation } from 'react-i18next';
+import { Users } from '../models/form';
 import dayjs from 'dayjs';
-
-interface Users {
-  key: string;
-  prefix: string;
-  fname: string;
-  lname: string;
-  passport: string | undefined;
-  cardnumber: string;
-  salary: number | null;
-  gender: string;
-  phonenumber: string;
-  nationality: string;
-  birthdate: string;
-};
 
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
 
@@ -29,11 +16,33 @@ interface TableParams {
 
 function FormComponent(){
 
-  const dispatch = useAppDispatch();
   const { t } = useTranslation();
+  const dispatch = useAppDispatch();
   const users = useTypedSelector((state) => state.users.users);
   const user = useTypedSelector((state) => state.user.user);
   const store_data = useTypedSelector((state) => state);
+  
+  const [record, setRecord] = useState<React.Key[]>([]);
+  const [tableParams, setTableParams] = useState<TableParams>({
+    pagination: {
+      current: 1,
+      pageSize: 10,
+    }
+  });
+
+  const [form, setForm] = useState<Users>({
+    key: '',
+    prefix: '',
+    fname: '',
+    lname: '',
+    birthdate: '',
+    nationality: '',
+    cardnumber: '',
+    passport: '',
+    phonenumber: '',
+    salary: null,
+    gender: '',
+  });
 
   const options = {
     prefix : [
@@ -49,20 +58,6 @@ function FormComponent(){
   useEffect(() => {
     setForm(user as any);
   },[user]);
-
-  const [form, setForm] = useState<Users>({
-    key: '',
-    prefix: '',
-    fname: '',
-    lname: '',
-    birthdate: '',
-    nationality: '',
-    cardnumber: '',
-    passport: '',
-    phonenumber: '',
-    salary: null,
-    gender: '',
-  });
 
   const handleInputForm = (key:string, value: string | null | string[] | number) => {
     setForm((s) => ({
@@ -108,15 +103,6 @@ function FormComponent(){
       gender: '',
     })
   };
-
-  const [tableParams, setTableParams] = useState<TableParams>({
-    pagination: {
-      current: 1,
-      pageSize: 10,
-    }
-  });
-
-  const [record, setRecord] = useState<React.Key[]>([]);
 
   const handleTableChange: TableProps['onChange'] = (pagination, filters, sorter) => {
       setTableParams(() => ({
@@ -178,7 +164,7 @@ function FormComponent(){
       ),
     },
   ];
-console.log(user)
+
   return(
     <div>
       <Spin spinning={store_data.users.status === 'loading' || store_data.user.status === 'loading'} size="large" delay={500}>

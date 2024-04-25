@@ -4,22 +4,9 @@ import type { MenuProps } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { redirect } from "react-router-dom";
 
-const { Header, Content } = Layout;
-
 type FooProps = {
   children: ReactNode
-}
-
-const Lang = [
-  { 
-    key: 'EN',
-    label: 'EN',
-  },
-  { 
-    key: 'TH',
-    label: 'TH',
-  }
-];
+};
 
 const App = (prop : FooProps) => {
 
@@ -27,19 +14,15 @@ const App = (prop : FooProps) => {
   const lang = localStorage.getItem('lang');
 
   const TapMenu = [
-    {
-      key: 'home',
-      label: t('home'),
-    },
-    {
-      key: 'layout_style',
-      label: t('layout_style'),
-    },
-    {
-      key: 'form_table',
-      label: t('form_table'),
-    }
-];
+    { key: 'home', label: t('home') },
+    { key: 'layout_style', label: t('layout_style') },
+    { key: 'form_table', label: t('form_table') }
+  ];
+
+  const Lang = [
+    {  key: 'EN', label: 'EN' },
+    {  key: 'TH', label: 'TH' }
+  ];
 
   useEffect(() => {
     if(lang){
@@ -63,23 +46,13 @@ const App = (prop : FooProps) => {
 
   return (
     <Layout>
-      <Header
-        style={{
-          position: 'sticky',
-          top: 0,
-          zIndex: 1,
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'end',
-        }}
-      >
+      <Layout.Header className="header">
         <Menu
           theme="dark"
           mode="horizontal"
           selectedKeys={[window.location.href.split('/')[3] || 'home']}
           items={TapMenu}
-          style={{ flex: 1, minWidth: 0 }}
+          className="menu" 
           onClick={onClick}
         />
       <Dropdown
@@ -90,14 +63,10 @@ const App = (prop : FooProps) => {
           </Space>
         </Button>
       </Dropdown>
-      </Header>
-      <Content style={{
-        padding: '3%',
-        minHeight: 500,
-        background: 'linear-gradient(to right, #6eda78, #ffa200)',
-      }}>
+      </Layout.Header>
+      <Layout.Content className="content">
           {prop.children}
-      </Content>
+      </Layout.Content>
     </Layout>
   );
 };
