@@ -2,6 +2,7 @@ import { ReactNode, useEffect } from 'react';
 import { Layout, Dropdown, Button, Menu } from 'antd';
 import type { MenuProps } from 'antd';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from "react-router-dom";
 
 type FooProps = {
   children: ReactNode
@@ -11,11 +12,12 @@ const App = (prop : FooProps) => {
 
   const { t, i18n } = useTranslation();
   const lang = localStorage.getItem('lang');
+  const navigate = useNavigate();
 
   const TapMenu = [
-    { key: 'home', label: (<a href="/">{t('home')}</a>) },
-    { key: 'layout_style', label: (<a href="/layout_style">{t('layout_style')}</a>) },
-    { key: 'form_table', label: (<a href="/form_table">{t('form_table')}</a>) }
+    { key: 'home', label: t('home') },
+    { key: 'layout_style', label: t('layout_style') },
+    { key: 'form_table', label: t('form_table') }
   ];
 
   const Lang = [
@@ -39,6 +41,10 @@ const App = (prop : FooProps) => {
     onClick: handleMenuClick,
   };
 
+  const handleMenuChange = (event:any) => {
+    navigate(`/${event.key}`);
+  };
+
   return (
     <Layout>
       <Layout.Header className="header">
@@ -48,8 +54,8 @@ const App = (prop : FooProps) => {
           selectedKeys={[window.location.href.split('/')[3] || 'home']}
           items={TapMenu}
           className="menu" 
+          onSelect={handleMenuChange} 
         />
-
         <Dropdown
           menu={menuProps}>
           <Button>

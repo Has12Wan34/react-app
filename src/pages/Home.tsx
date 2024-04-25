@@ -1,11 +1,12 @@
 import { Row, Col, Typography } from "antd";
 import { useTranslation } from 'react-i18next';
-import { Link } from "react-router-dom";
 import { Menu } from "../models/home";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
 
     const { t } = useTranslation();
+    const navigate = useNavigate();
 
     const Menu: Menu[] = [
         {
@@ -26,11 +27,9 @@ function Home() {
         <Row justify="center" gutter={[8, 8]}>
             {Menu?.map((v, i) => (
                 <Col span={4} key={i}>
-                    <div className="menu-item">
-                        <a href={`/${v.value}`}>
-                            <Typography.Title level={3}>{v.title}</Typography.Title>
-                            <Typography.Title level={5}>{v.detail}</Typography.Title>
-                        </a>
+                    <div className="menu-item" onClick={() => navigate(`/${v.value}`)}>
+                        <Typography.Title level={3}>{v.title}</Typography.Title>
+                        <Typography.Title level={5}>{v.detail}</Typography.Title>
                     </div>
                 </Col>
             ))}

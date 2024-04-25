@@ -9,7 +9,6 @@ i18n
     fallbackLng: 'EN',
     ns: ['trans'],
     defaultNS: 'trans',
-    debug: true,
     interpolation: {
       escapeValue: false
     },
