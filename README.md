@@ -1,46 +1,36 @@
-# Getting Started with Create React App
+# สรุปเนื้อหา
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### `CLI`
 
-## Available Scripts
+vite : 
+- เป็น tool ที่ช่วยให้เราขึ้นโปรเจคหรือสร้างโปรเจคได้สะดวกและรวดเร็วมากขึ้น 
+- โดดเด่นคือความเร็วในการโหลดและรีเฟรชของแอพพลิเคชั่น 
 
-In the project directory, you can run:
+### `Components`
 
-### `npm start`
+- การสร้างและซ้อนคอมโพเนนต์
+- React จะมีการสร้าง Component อยู่ด้วยกัน 2 รูปแบบ
+    - Class Component นั้นจะเขียนส่วนของการแสดงผลผ่าน method ชื่อว่า render() ซึ่งเป็น method จาก React Component เราจึงต้องเขียน extends Component ทุกครั้งที่สร้าง
+    - Function Component เป็นการสร้าง component ที่สั้นกระชับ และ สะดวกกว่าแบบ Class Component โดยที่ยังทำงานเหมือนกัน โดยหลักการตั้งชื่อ Function นั้นจะกำหนดให้ตัวอักษรตัวแรกของชื่อ Function เป็นตัวพิมพ์ใหญ่เสมอ  
+- Logical && Operetor
+    - AND (&&): ตัวดำเนินการ AND จะมีค่าเป็น true เมื่อทั้งสองเงื่อนไขเป็น true, หากมีเงื่อนไขใดเป็น false จะได้ค่าเป็น false
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+    - OR (||): ตัวดำเนินการ OR จะมีค่าเป็น true เมื่อมีอย่างน้อยหนึ่งเงื่อนไขเป็น true, หากทั้งหมดเป็น false จะได้ค่าเป็น false
+- `<section>` มักจะใช้งานร่วมกับ css เเยกหรือจัดกลุ่มผลลัพธ์
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+### `React Hook`
+- useRef:
+    - เป็น Hook ใน React ที่ใช้สำหรับการสร้าง reference ไปยัง elements ใน DOM หรือใช้ในการเก็บค่าของตัวแปรที่ถูกเปลี่ยนแปลงโดยไม่ทำให้ Component ทำการ re-render ขึ้นมาใหม่
+- createRef:
+    - วิธีการ Access DOM nodes ด้วยการ Reference ใช้กับ Class component (การทำงานคล้ายกับ useRef)
+- forwardRef: 
+    - การส่งต่อ Ref จาก Parent ไปที่ Child เมื่อสร้างเป็น Ref เป็น 
+- useMemo: 
+    - หลักการทำงานก็คือ จะทำการ Cache ข้อมูลเพื่อจำค่าไว้ในหน่วยความจำแคช (Cache Memory) โดยฟังก์ชันจะถูกเรียกใช้งานในครั้งแรกของการ Render และเมื่อค่ามีการเปลี่ยนแปลงเท่านั้น
+    - ต้อง `return` ค่าออกมาด้วยทุกครั้ง
+- useCallback: 
+    - หลักการทำงานก็คือ จะทำการ Cache “Function” เพื่อจำการทำงานไว้ในหน่วยความจำแคช (Cache Memory) โดยฟังก์ชันจะถูกเรียกใช้งานในครั้งแรกของการ Render และเมื่อค่ามีการเปลี่ยนแปลงเท่านั้น
+    - เป็นฟังก์ชัน(ไม่ต้อง Return) รับ Parameters ได้ 
+- useLayoutEffect: 
+    - ทำงานเหมือนกับ useEffect เกือบทุกประการ ยกเว้นอย่างเดียวคือ มันจะทำงานครั้งแรก ก่อนที่จะถูก render รอบแรก
+    - ซึ่งคุณประโยชน์ของมันอาจจะมีไว้ใช้คำนวณค่าสักอย่างเพื่อที่จะแสดงผลในการ render ครั้งแรก 

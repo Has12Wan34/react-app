@@ -50,5 +50,8 @@
     "test": "Test",
     "layout_style": "Layout & Style",
     "form_table": "Form & Table",
-    "home": "Home"
+    "home": "Home",
+    "class_component": "Class Component",
+    "refs": "Refs",
+    "hooks": "Hooks"
   }

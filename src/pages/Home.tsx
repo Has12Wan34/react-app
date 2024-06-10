@@ -2,6 +2,7 @@ import { Row, Col, Typography } from "antd";
 import { useTranslation } from 'react-i18next';
 import { Menu } from "../models/home";
 import { useNavigate } from "react-router-dom";
+import CardHome from "../components/card_home";
 
 function Home() {
 
@@ -23,15 +24,14 @@ function Home() {
         }
     ];
 
+    const handleNavigateRoute = (router:string) => {
+        navigate(router);
+    }
+
     return (
         <Row justify="center" gutter={[8, 8]}>
             {Menu?.map((v, i) => (
-                <Col span={4} key={i}>
-                    <div className="menu-item" onClick={() => navigate(`/${v.value}`)}>
-                        <Typography.Title level={3}>{v.title}</Typography.Title>
-                        <Typography.Title level={5}>{v.detail}</Typography.Title>
-                    </div>
-                </Col>
+                <CardHome value={v} navigate={handleNavigateRoute}/>
             ))}
         </Row>
     )

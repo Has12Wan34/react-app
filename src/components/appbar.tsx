@@ -17,7 +17,10 @@ const App = (prop : FooProps) => {
   const TapMenu = [
     { key: 'home', label: t('home') },
     { key: 'layout_style', label: t('layout_style') },
-    { key: 'form_table', label: t('form_table') }
+    { key: 'form_table', label: t('form_table') },
+    { key: 'class_component', label: t('class_component') },
+    { key: 'Refs', label: t('refs') },
+    { key: 'hooks', label: t('hooks') },
   ];
 
   const Lang = [
